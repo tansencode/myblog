@@ -1,0 +1,12 @@
+<!--{% extends 'base.html' %}  {# 注释：导入公共html模板 #}-->
+{% extends 'blog_list.html' %}
+{% block title %}    {# 标题模块 #}
+	{{ blog_type.type_name }}
+{% endblock %}
+
+{% block block_list_type %}  <!--从blog_list.html文件中直接引用-->
+	分类：{{ blog_type.type_name }}(一共有{{ blogs|length }}篇博客)
+	<a href="{% url 'blog_list' %}">查看全部博客</a>
+{% endblock %}
+
+{% block nav_blog_active %}active{% endblock %}   {# 选中后颜色处于激活状态 #}

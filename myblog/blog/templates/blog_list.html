@@ -1,0 +1,120 @@
+{% extends 'base.html' %}  {# 导入公共html模板 #}
+{% load staticfiles %}   {# 加载静态css/js文件 #}
+
+{% block title %}    {# 标题模块 #}
+	我的网站
+{% endblock %}
+
+{% block header_extends %}   {# 引入css文件 #}
+	<link rel="stylesheet" type="text/css" href="{% static '/css/blog_list.css' %}">
+{% endblock %}
+
+{% block nav_blog_active %}active{% endblock %}   {# 选中后颜色处于激活状态 #}
+
+
+{% block content %}    {# 博客内容 #}
+	<div class="container">   {# 让博客内容显示为左右两个布局 #}
+		<div class="row"> 
+			<!--响应式布局-->
+			<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">  {# 适应不同屏幕大小，从小屏幕写到大屏幕，左边内容，相加为12 #}
+				<div class="panel panel-default">
+
+					<div class="panel-heading">{% block blog_list_title %}
+						博客列表{% endblock %}
+					</div>   <!--<p>一共有{{ blogs|length }}篇博客</p>-->	
+
+					<div class="panel-body">
+						{% for blog in page_of_blogs.object_list %}   <!--循环输出，为Django的用法-->
+							<div class="blog">
+		            		   <!--显示博客的点击链接-->
+		            			<h3><a href="{% url 'blog_detail' blog.pk %}"> {{ blog.title }}</a></h3>   <!--标题和内容-->
+
+		            			<p class="blog-info">   <!--设置用图标表示分类和发表日期-->
+		            				<span class="glyphicon glyphicon-tags" aria-hidden="true"></span><a>{{ blog.blog_type }}</a>
+		            				<span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ blog.create_time|date:"Y-m-d   G:n:s" }}
+		            				
+		            			</p>
+
+								<p>{{ blog.content|truncatechars:30 }}</p>  <!--truncatechars:30，文章内容只显示文章前30个字-->
+							</div>
+
+							{% empty %}  <!--如果博客为空-->
+								<div class="blog">
+									<p>--暂无博客，敬请期待--</p>
+								</div>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="paginator">
+						<nav aria-label="Page navigation">   <!--分页功能-->
+						    <ul class="pagination">
+						    	
+							    <li>    <!--上一页-->
+							    	{% if page_of_blogs.has_previous %}  <!--判断如果有上一页-->
+						    		<a href="?page={{ page_of_blogs.previous_page_number }}" aria-label="Previous">
+							        	<span aria-hidden="true">&laquo;</span>
+							      	</a>
+						    		{% else %}
+						    		<span aria-hidden="true">&laquo;</span>
+						    		{% endif %}  
+							    </li>  
+							    	<!--分页数字显示-->
+							    	{% for page_num in page_range %}
+
+							    		{% if page_num == page_of_blogs.number %}  <!--选中当前页高亮-->
+							    			<li class="active"><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+							    		{% else %}
+							    			{% if page_num == '...' %}   <!--排除省略号-->
+							    				<li><span>{{ page_num }}</span></li>
+							    			{% else %} 
+							    				<li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+							    			{% endif %}
+							    		{% endif %}
+										
+									{% endfor %}
+
+							    <li>  <!-- 下一页-->
+							    	{% if page_of_blogs.has_next %}  <!--判断如果有下一页-->
+						    		<a href="?page={{ page_of_blogs.next_page_number }}" aria-label="Previous">
+							        	<span aria-hidden="true">&raquo;</span>
+							      	</a>
+						    		{% else %}
+						    		<span aria-hidden="true">&raquo;</span>
+						    		{% endif %} 
+							      </a>
+							    </li>
+							</ul>
+							<p>
+								共有{{ page_of_blogs.paginator.count }}篇博客 | 
+								当前第{{ page_of_blogs.number }}页，
+								共{{ page_of_blogs.paginator.num_pages }}页
+							</p>
+						</nav>
+				</div>
+			</div>
+			
+			<div class="hidden-xs col-sm-4 col-md-3 col-lg-2">  {# 修饰博客分类部分，右边内容 #}
+				<div class="panel panel-default">
+
+					<div class="panel-heading">博客分类</div>
+					<div class="panel-body">
+						<ul class="blog-types">  
+							{% for blog_type in blog_types %}
+							<li>
+								<a>
+									{{ blog_type.type_name }}
+								</a>
+							</li>
+					   		{% empty %}     <!--如果博客为空-->
+							<li>暂无分类</li>
+
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+		
+{% endblock %}

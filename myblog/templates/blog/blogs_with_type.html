@@ -1,0 +1,19 @@
+{% extends 'base.html' %}  {# 注释：导入公共html模板 #}
+{% block title %}    {# 标题模块 #}
+	{{ blog_type.type_name }}
+{% endblock %}
+
+{% block content %}
+		<p>一共有{{ blogs_count }}篇博客</p>
+		<!--<p>一共有{{ blogs|length }}篇博客</p>-->
+		{% for blog in blogs %}   <!--循环输出，为Django的用法-->
+
+            <a href="{% url 'blog_detail' blog.pk %}">    <!--显示博客的点击链接-->
+            	<h3>{{ blog.title }}</h3>   <!--标题和内容-->
+            </a>   
+			
+			<p>{{ blog.content|truncatechars:30 }}</p>  <!--truncatechars:30只显示文章前30个字-->
+		{% empty %}  <!--如果博客为空-->
+			<p>--暂无博客，敬请期待--</p>
+		{% endfor %}
+{% endblock %}

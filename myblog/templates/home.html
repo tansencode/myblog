@@ -1,0 +1,16 @@
+{% extends 'base.html' %}     {# 导入根模板文件 #}
+{% load staticfiles %}     {# 必须导入静态文件，即css/js声明 #} 
+
+{% block title %}   {# 页面标题 #}
+	我的博客 | 首页
+{% endblock %}
+
+{% block nav_home_active %}active{% endblock %}    {# 选中后颜色处于激活状态 #}
+
+{%block header_extends %}    {# 修饰页面内容 #}
+	<link rel="stylesheet" type="text/css" href="{% static '/css/home.css' %}">
+{% endblock %}
+
+{% block content %}    {# 页面内容 #}
+	<h3 class="content">欢迎访问我的网站，随便看</h3>
+{% endblock %}

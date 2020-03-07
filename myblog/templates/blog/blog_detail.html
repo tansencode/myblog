@@ -1,0 +1,12 @@
+{% extends 'base.html' %}  {# 导入公共html模板 #}
+{% block title %}    {# 标题模块 #}
+	{{ blog.title }}
+{% endblock %}
+
+{% block content %}   {# 页面内容 #}
+		<h3>{{ blog.title }}</h3>  <!--标题、类型、作者、内容，从models引用-->
+		<p>类型:{{ blog.blog_type }}</p> 
+		<p>作者:{{ blog.author }}</p>
+		<p>发表时间:{{ blog.create_time|date:"Y-m-d   G:n:s" }}</p>  <!--添加date过滤器-->
+		<p>{{ blog.content }}</p>
+{% endblock %}
